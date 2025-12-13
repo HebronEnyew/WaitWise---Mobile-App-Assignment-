@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+//kal
+import 'package:wait_wise/pages/registerPage.dart';
 
 class ServicePage extends StatefulWidget {
+  const ServicePage({super.key});
+
   @override
   _ServicePageState createState() => _ServicePageState();
 }
@@ -25,8 +29,10 @@ class _ServicePageState extends State<ServicePage> {
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text("Select service",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: Text(
+          "Select service",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
         centerTitle: false,
       ),
 
@@ -39,8 +45,17 @@ class _ServicePageState extends State<ServicePage> {
                 itemCount: services.length,
                 itemBuilder: (context, index) {
                   final service = services[index];
+                  //kal
                   return InkWell(
                     onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => RegisterPage(
+                            serviceName: service["name"] as String,
+                          ),
+                        ),
+                      );
                     },
                     borderRadius: BorderRadius.circular(22),
                     child: _buildServiceCard(
@@ -49,6 +64,8 @@ class _ServicePageState extends State<ServicePage> {
                       service["time"],
                     ),
                   );
+
+                  //kal
                 },
               ),
             ),
@@ -85,16 +102,22 @@ class _ServicePageState extends State<ServicePage> {
               children: [
                 Row(
                   children: [
-                    Text(name,
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text(
+                      name,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     SizedBox(width: 8),
                     Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
                   ],
                 ),
                 SizedBox(height: 6),
-                Text("no of people waiting for this\nservice",
-                    style: TextStyle(fontSize: 13, color: Colors.black54)),
+                Text(
+                  "no of people waiting for this\nservice",
+                  style: TextStyle(fontSize: 13, color: Colors.black54),
+                ),
               ],
             ),
           ),
@@ -108,11 +131,12 @@ class _ServicePageState extends State<ServicePage> {
               border: Border.all(color: Colors.blue[200]!),
             ),
             child: Text(
-              "${queue}",
+              "$queue",
               style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue[700]),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue[700],
+              ),
             ),
           ),
 
@@ -130,18 +154,20 @@ class _ServicePageState extends State<ServicePage> {
                 Text(
                   "Estimated time for one person\n",
                   style: TextStyle(
-                      fontSize: 10,
-                      color: Colors.green[800],
-                      fontWeight: FontWeight.w500),
+                    fontSize: 10,
+                    color: Colors.green[800],
+                    fontWeight: FontWeight.w500,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 2),
                 Text(
-                  "${time} min",
+                  "$time min",
                   style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.green[800],
-                      fontWeight: FontWeight.bold),
+                    fontSize: 16,
+                    color: Colors.green[800],
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -169,31 +195,15 @@ class _ServicePageState extends State<ServicePage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
-              onPressed: () {
-              },
-              icon: Icon(Icons.home_outlined, color: Colors.black, size: 30)),
+            onPressed: () {},
+            icon: Icon(Icons.home_outlined, color: Colors.black, size: 30),
+          ),
           IconButton(
-              onPressed: () {
-                
-              },
-              icon: Icon(Icons.linear_scale, color: Colors.black, size: 30)),
+            onPressed: () {},
+            icon: Icon(Icons.linear_scale, color: Colors.black, size: 30),
+          ),
         ],
       ),
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
