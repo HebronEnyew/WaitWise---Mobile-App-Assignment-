@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 //kal
 import 'package:wait_wise/pages/registerPage.dart';
+import 'package:wait_wise/services/queue_service.dart';
 
 class ServicePage extends StatefulWidget {
   const ServicePage({super.key});
@@ -10,12 +11,18 @@ class ServicePage extends StatefulWidget {
 }
 
 class _ServicePageState extends State<ServicePage> {
+  final _queueService = QueueService();
+  
   List<Map<String, dynamic>> services = [
-    {"name": "New Id card", "queue": 0, "time": 0},
-    {"name": "Renew Id card", "queue": 0, "time": 0},
-    {"name": "Tax payment", "queue": 0, "time": 0},
-    {"name": "Birth certificate", "queue": 0, "time": 0},
+    {"name": "New Id card", "time": 5},
+    {"name": "Renew Id card", "time": 3},
+    {"name": "Tax payment", "time": 4},
+    {"name": "Birth certificate", "time": 6},
   ];
+
+  int _getQueueCount(String serviceName) {
+    return _queueService.getTotalInQueue(serviceName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +67,7 @@ class _ServicePageState extends State<ServicePage> {
                     borderRadius: BorderRadius.circular(22),
                     child: _buildServiceCard(
                       service["name"],
-                      service["queue"],
+                      _getQueueCount(service["name"]),
                       service["time"],
                     ),
                   );
@@ -195,7 +202,9 @@ class _ServicePageState extends State<ServicePage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+            },
             icon: Icon(Icons.home_outlined, color: Colors.black, size: 30),
           ),
           IconButton(
