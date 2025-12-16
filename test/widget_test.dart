@@ -5,7 +5,6 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:wait_wise/main.dart';
@@ -17,7 +16,10 @@ void main() {
 
     // Verify that the home page is displayed
     expect(find.text('Welcome to waitwise'), findsOneWidget);
-    expect(find.text('Join the virtual line and track your turn in real time.'), findsOneWidget);
+    expect(
+      find.text('Join the virtual line and track your turn in real time.'),
+      findsOneWidget,
+    );
     expect(find.text('Get Started'), findsOneWidget);
   });
 }

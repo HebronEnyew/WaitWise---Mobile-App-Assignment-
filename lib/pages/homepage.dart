@@ -6,7 +6,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFFF5CC),  
+      backgroundColor: Color(0xFFFFF5CC),
 
       body: Stack(
         children: [
@@ -16,18 +16,16 @@ class HomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    "assets/queue.png",
-                    height: 180,
-                  ),
+                  Image.asset("assets/queue.png", height: 180),
                   SizedBox(height: 24),
 
                   Text(
                     "Welcome to waitwise",
                     style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
 
                   SizedBox(height: 8),
@@ -48,10 +46,13 @@ class HomePage extends StatelessWidget {
                       backgroundColor: Colors.yellow[700],
                       minimumSize: Size(double.infinity, 50),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30)),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
                     ),
-                    child: Text("Get Started",
-                        style: TextStyle(color: Colors.black, fontSize: 18)),
+                    child: Text(
+                      "Get Started",
+                      style: TextStyle(color: Colors.black, fontSize: 18),
+                    ),
                   ),
                 ],
               ),
@@ -64,12 +65,14 @@ class HomePage extends StatelessWidget {
             child: TextButton(
               onPressed: () {
                 // TODO: Navigate to admin login
+                Navigator.pushNamed(context, "/loginpage");
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow[700],
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
+                  borderRadius: BorderRadius.circular(20),
+                ),
               ),
               child: Text(
                 "Log in for admin",
@@ -82,4 +85,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
