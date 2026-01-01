@@ -3,8 +3,8 @@
 
 Overview of the app UI and a sample registration success screen:
 
-![Overview](assets/w1.jpg)
-![Success screen](assets/w2.jpg)
+![Overview](assets/w1.svg)
+![Success screen](assets/w2.svg)
 
 ## Project Summary & Review
 
