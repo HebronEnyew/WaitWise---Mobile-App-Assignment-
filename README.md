@@ -1,16 +1,21 @@
 # wait_wise
 
-A new Flutter project.
 
-## Getting Started
+Overview of the app UI and a sample registration success screen:
 
-This project is a starting point for a Flutter application.
+![Overview](assets/w1.jpg)
+![Success screen](assets/w2.jpg)
 
-A few resources to get you started if this is your first Flutter project:
+## Project Summary & Review
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+WaitWise is a compact, practical Flutter MVP for managing physical queues digitally. It uses Supabase (Postgres + Realtime) to store user registrations, seed admin accounts, and broadcast queue changes in real time. The app focuses on simplicity and utility — users can register for services, see their queue position and an estimated wait time, while admins can check off served customers.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Highlights:
+- Real-time updates using Supabase Realtime channels.
+- Per-service estimated time calculation based on recent completion history and configurable per-service timings.
+- Admin seeding from environment (`ADMINS_JSON`) to avoid hardcoding credentials.
+- Simple, friendly UI designed for quick registration and clear status feedback.
+
+
+
+
