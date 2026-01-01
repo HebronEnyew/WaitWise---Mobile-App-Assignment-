@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset("assets/queue.png", height: 180),
+                  Image.asset("assets/queue.png", height: 180, errorBuilder: (context, error, stackTrace) => const SizedBox(height: 180)),
                   SizedBox(height: 24),
 
                   Text(
@@ -64,7 +64,6 @@ class HomePage extends StatelessWidget {
             bottom: 25,
             child: TextButton(
               onPressed: () {
-                // TODO: Navigate to admin login
                 Navigator.pushNamed(context, "/loginpage");
               },
               style: ElevatedButton.styleFrom(

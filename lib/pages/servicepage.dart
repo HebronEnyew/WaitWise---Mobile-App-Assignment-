@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-//kal
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:wait_wise/pages/registerPage.dart';
-import 'package:wait_wise/services/queue_service.dart';
+import 'package:wait_wise/services/supabase_service.dart';
+import 'package:wait_wise/config/services.dart';
 
 class ServicePage extends StatefulWidget {
   const ServicePage({super.key});
@@ -11,17 +12,97 @@ class ServicePage extends StatefulWidget {
 }
 
 class _ServicePageState extends State<ServicePage> {
-  final _queueService = QueueService();
-  
-  List<Map<String, dynamic>> services = [
-    {"name": "New Id card", "time": 5},
-    {"name": "Renew Id card", "time": 3},
-    {"name": "Tax payment", "time": 4},
-    {"name": "Birth certificate", "time": 6},
-  ];
+  final Map<String, int> _queueCounts = {
+    "New Id card": 0,
+    "Renew Id card": 0,
+    "Tax payment": 0,
+    "Birth certificate": 0,
+  };
+
+  final Map<String, String> _serviceMapping = serviceNameToKey;
+
+  // Use shared `services` from config
+  List<Map<String, dynamic>> servicesList = services;
+
+  RealtimeChannel? _channel;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadQueueCounts();
+    _setupRealtime();
+  }
+
+  @override
+  void dispose() {
+    _channel?.unsubscribe();
+    super.dispose();
+  }
+
+  void _setupRealtime() {
+    _channel = SupabaseService.instance.client
+        .channel('service_queue_counts')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.insert,
+          schema: 'public',
+          table: 'users',
+          callback: (payload) {
+            final serviceName = payload.newRecord['service_name'] as String?;
+            if (serviceName != null) {
+              _updateQueueCount(serviceName);
+            }
+          },
+        )
+        .onPostgresChanges(
+          event: PostgresChangeEvent.delete,
+          schema: 'public',
+          table: 'users',
+          callback: (payload) {
+            final serviceName = payload.oldRecord['service_name'] as String?;
+            if (serviceName != null) {
+              _updateQueueCount(serviceName);
+            }
+          },
+        )
+        .subscribe();
+  }
+
+  void _updateQueueCount(String serviceName) {
+    _loadQueueCountForService(serviceName);
+  }
+
+  Future<void> _loadQueueCounts() async {
+    for (var service in servicesList) {
+      final serviceName = service["name"] as String;
+      final dbServiceName =
+          _serviceMapping[serviceName] ?? serviceName.toLowerCase();
+      await _loadQueueCountForService(dbServiceName);
+    }
+  }
+
+  Future<void> _loadQueueCountForService(String dbServiceName) async {
+    try {
+      final users = await SupabaseService.instance.getUsersByService(
+        dbServiceName,
+      );
+      final displayName = _serviceMapping.entries
+          .firstWhere(
+            (e) => e.value == dbServiceName,
+            orElse: () => MapEntry(dbServiceName, dbServiceName),
+          )
+          .key;
+      if (mounted) {
+        setState(() {
+          _queueCounts[displayName] = users.length;
+        });
+      }
+    } catch (e) {
+      print('Error loading queue count: $e');
+    }
+  }
 
   int _getQueueCount(String serviceName) {
-    return _queueService.getTotalInQueue(serviceName);
+    return _queueCounts[serviceName] ?? 0;
   }
 
   @override
@@ -49,10 +130,9 @@ class _ServicePageState extends State<ServicePage> {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: services.length,
+                itemCount: servicesList.length,
                 itemBuilder: (context, index) {
-                  final service = services[index];
-                  //kal
+                  final service = servicesList[index];
                   return InkWell(
                     onTap: () {
                       Navigator.push(
@@ -71,8 +151,6 @@ class _ServicePageState extends State<ServicePage> {
                       service["time"],
                     ),
                   );
-
-                  //kal
                 },
               ),
             ),
@@ -128,8 +206,6 @@ class _ServicePageState extends State<ServicePage> {
               ],
             ),
           ),
-
-          // MIDDLE queue number
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -208,8 +284,10 @@ class _ServicePageState extends State<ServicePage> {
             icon: Icon(Icons.home_outlined, color: Colors.black, size: 30),
           ),
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.linear_scale, color: Colors.black, size: 30),
+            onPressed: () {
+              Navigator.pushNamed(context, "/userlogin");
+            },
+            icon: Icon(Icons.person_search, color: Colors.black, size: 30),
           ),
         ],
       ),

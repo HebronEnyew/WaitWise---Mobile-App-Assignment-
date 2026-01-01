@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wait_wise/services/supabase_service.dart';
+import 'package:wait_wise/pages/adminpage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -38,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               children: [
                 const SizedBox(height: 80),
-                // Title
                 const Text(
                   'Login',
                   style: TextStyle(
@@ -53,8 +54,6 @@ class _LoginPageState extends State<LoginPage> {
                   style: TextStyle(fontSize: 18, color: Colors.black54),
                 ),
                 const SizedBox(height: 60),
-
-                // ID Number Field
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -90,8 +89,6 @@ class _LoginPageState extends State<LoginPage> {
                 ),
 
                 const SizedBox(height: 25),
-
-                // Password Field
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -140,16 +137,26 @@ class _LoginPageState extends State<LoginPage> {
                 ),
 
                 const SizedBox(height: 50),
-
-                // Login Button
                 SizedBox(
                   width: double.infinity,
                   height: 55,
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.pushNamed(context, "/adminpage");
+                    onPressed: () async {
+                      if (!_formKey.currentState!.validate()) return;
+                      final id = _idController.text.trim();
+                      final password = _passwordController.text.trim();
+                      final admin = await SupabaseService.instance.getAdmin(id, password);
+                      if (admin == null) {
+                        if (!mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid admin credentials')));
+                        return;
                       }
+                      final service = admin['service'] as String? ?? '';
+                      if (!mounted) return;
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => Adminpage(serviceName: service)),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.yellow[700],
